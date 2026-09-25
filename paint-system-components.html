@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Paint system components - Spray Projector</title><link rel="stylesheet" href="documentation.css"></head><body><main><nav><a href="index.html">Spray Projector documentation</a> <a href="TableOfContents.html">Contents</a></nav><h1>Paint system components</h1>
+<p><a href="index.html">Guide home</a> / Component reference</p>
+<p>Use this page to identify the pieces of a painting setup in the Inspector.</p>
+<h2>The basic painting setup</h2>
+<table><thead><tr><th>Component or asset</th><th>Role</th><th>What to assign</th></tr></thead><tbody>
+<tr><td>PaintProjector</td><td>The nozzle or brush that projects paint forward</td><td>Paint Settings and a controller that calls Paint</td></tr>
+<tr><td>PaintSettings</td><td>Reusable paint style</td><td>Paint shader, profile texture, and visual controls</td></tr>
+<tr><td>PaintReceiver</td><td>The surface that owns accumulated paint textures</td><td>Receiver Settings, renderers, and an ID if saving</td></tr>
+<tr><td>ReceiverSettings</td><td>Shared texture resolution and processing resources</td><td>Paint processing shader, seam shader, compute shaders, and noise</td></tr>
+</tbody></table>
+<p>The visible receiver <strong>material</strong> is separate from Receiver Settings. It uses a Paint Receiver shader to display the textures.</p>
+<p>A projector does not paint automatically. A receiver missing Receiver Settings logs an error and disables itself; assign the asset and re-enable it. Warmup and loading may require more than one frame before painting can begin.</p>
+<h2>Optional scene features</h2>
+<table><thead><tr><th>Component</th><th>Use it for</th><th>Placement</th></tr></thead><tbody>
+<tr><td>ReceiversManager</td><td>Scene-wide saving, preview loading, clearing, and distance-based texture management</td><td>One persistent manager across loaded scenes</td></tr>
+<tr><td>PaintDripSystem</td><td>Simulating running paint</td><td>One persistent instance</td></tr>
+<tr><td>PaintDripRenderer</td><td>Drawing simulated trails into receivers</td><td>One persistent instance</td></tr>
+<tr><td>PaintDripEmitter</td><td>Creating drips when paint builds up</td><td>On each nozzle that should emit drips</td></tr>
+<tr><td>PaintReceiverProxy</td><td>Connecting a separate collider to a receiver for painting</td><td>On the collider object; assign Receiver</td></tr>
+<tr><td>DisablePaintOcclusion</td><td>Excluding a renderer from projector occlusion</td><td>On the renderer's GameObject</td></tr>
+</tbody></table>
+<p>Basic painting can work without ReceiversManager. The manager is needed for the supplied scene-wide orchestration, not for every individual stroke.</p>
+<h2>For developers</h2>
+<p>The runtime types above use the <code>Assets.SprayProjector.Scripts</code> namespace. Sample controllers are separate from the runtime package API.</p>
+<p>See <a href="scripting-api.html">Scripting API</a> for calls and prerequisites.</p></main></body></html>

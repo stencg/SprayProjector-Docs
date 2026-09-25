@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Drips - Spray Projector</title><link rel="stylesheet" href="documentation.css"></head><body><main><nav><a href="index.html">Spray Projector documentation</a> <a href="TableOfContents.html">Contents</a></nav><h1>Drips</h1>
+<p><a href="index.html">Guide home</a> / Drips</p>
+<p><strong>Goal:</strong> create running paint when the nozzle lingers close to a surface.</p>
+<h2>Set up the scene</h2>
+<ol><li>Add one <code>PaintDripSystem</code> and one <code>PaintDripRenderer</code>. These are persistent singletons; avoid adding another pair for every tool.</li><li>On PaintDripRenderer, check <strong>Drip Shader</strong> and <strong>Profile Tex</strong>. The package provides <code>PaintDrip.shader</code>.</li><li>On every receiving mesh, put a non-convex MeshCollider on the same GameObject as its renderer.</li><li>Include that renderer in PaintReceiver's Renderers list and enable <strong>Allow Drips</strong>.</li><li>Add <code>PaintDripEmitter</code> to the nozzle, with its forward axis aimed at the surface.</li><li>Connect the controller to call <code>DetectDrip(...)</code> each frame while painting.</li></ol>
+<p>The receiver must have valid settings, paint UVs, and materials. If no valid renderer/non-convex MeshCollider pair is found when it enables, the receiver turns Allow Drips off. Fix the collider setup, enable Allow Drips again, and re-enable the receiver.</p>
+<p>Use stationary surfaces for the initial setup. Moving or deforming receivers need separate testing.</p>
+<h2>Make a drip appear</h2>
+<p>Move close to the surface, aim roughly perpendicular to it, and hold the nozzle nearly still while painting.</p>
+<table><thead><tr><th>Emitter control</th><th>Default</th><th>Effect</th></tr></thead><tbody>
+<tr><td>Ray Distance</td><td>0.07 m</td><td>Maximum distance for drip detection; independent of the projector's Far Clip</td></tr>
+<tr><td>Max Speed</td><td>0.1</td><td>Maximum calculated surface-hit movement speed for accumulation</td></tr>
+<tr><td>Accumulation Speed</td><td>4</td><td>Higher values build up paint faster</td></tr>
+<tr><td>Drip Threshold</td><td>1</td><td>Accumulation must exceed this value to emit a drip</td></tr>
+<tr><td>Layers</td><td>Default layer only</td><td>Collider layers checked by the emitter</td></tr>
+</tbody></table>
+<p>Opacity, distance, and surface angle also affect buildup. The emitter ignores trigger colliders. After emitting, it locks until the hit position moves enough; holding it perfectly still does not create an endless series of new drips.</p>
+<h2>Tune the visible trail</h2>
+<p>Adjust <strong>Drip Size</strong> on PaintDripRenderer for trail width. Thin trails can disappear at low receiver resolution; check <a href="paintable-surfaces.html">surface resolution</a> before increasing simulation work.</p>
+<p>If nothing appears, check the shader and profile, mesh Read/Write where needed, both scene components, emitter range and layers, and whether the receiver is ready to paint. A PaintReceiverProxy alone does not make a collider support drips.</p>
+<p>Related: <a href="troubleshooting.html">Troubleshooting</a>.</p></main></body></html>

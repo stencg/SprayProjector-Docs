@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Requirements and compatibility - Spray Projector</title><link rel="stylesheet" href="documentation.css"></head><body><main><nav><a href="index.html">Spray Projector documentation</a> <a href="TableOfContents.html">Contents</a></nav><h1>Requirements and compatibility</h1>
+<p><a href="index.html">Guide home</a> / Requirements</p>
+<h2>Package requirements</h2>
+<p>These values come from the package metadata used to generate this guide. Check the <code>package.json</code> in your installed package when choosing a Unity version. Declared versions do not establish support for every newer version or target platform.</p>
+<table><thead><tr><th>Item</th><th>Declared version</th></tr></thead><tbody>
+<tr><td>Package</td><td><code>1.0.0</code></td></tr>
+<tr><td>Unity baseline</td><td><code>6000.3</code></td></tr>
+<tr><td>Universal Render Pipeline (URP)</td><td><code>14.0.0</code></td></tr>
+<tr><td>Collections dependency</td><td><code>1.2.4</code></td></tr>
+<tr><td>Burst dependency</td><td><code>1.8.18</code></td></tr>
+</tbody></table>
+<p>The package also declares Unity Physics, Image Conversion, IMGUI, and UIElements modules.</p>
+<h2>Demo dependencies</h2>
+<ul><li><strong>Unity UI (uGUI):</strong> required for the Spray Demo UI.</li><li><strong>Input System:</strong> recommended for the demo, but not required by the core package.</li><li><strong>Legacy input:</strong> supported by a separate demo backend when Input System is not enabled.</li></ul>
+<p>Follow <a href="sample-exploration.html">Sample exploration</a> to configure the EventSystem for your selected input backend.</p>
+<h2>Rendering and device checks</h2>
+<p>Use a URP project with the supplied receiver shaders. The code includes URP compatibility handling; it does not establish support for Built-in or HDRP materials.</p>
+<p>Saving and PNG export require asynchronous GPU readback. Receiver initialization also requires the supplied compute shader references. Check these features on the intended device.</p>
+<p>Before delivery, test painting, saving, shader variants, texture memory, and any XR interaction in a target Player or headset. A successful compilation alone does not verify those behaviors.</p>
+<h2>Demo setup requirements</h2>
+<p>The Spray Demo requires Unity UI (uGUI) and the built-in Animation, Audio, and Particle System modules.</p>
+<p>For Input System input, install the Input System package and set <strong>Project Settings &gt; Player &gt; Other Settings &gt; Active Input Handling</strong> to <strong>Input System Package (New)</strong> or <strong>Both</strong>. Restart Unity if prompted. For legacy-only input, choose <strong>Input Manager (Old)</strong> and retain the <code>Horizontal</code>, <code>Vertical</code>, <code>Submit</code>, <code>Cancel</code>, and <code>Mouse ScrollWheel</code> entries used by the UI and demo controls. See <a href="sample-exploration.html">Sample exploration</a> for EventSystem setup.</p>
+<h2>Drip requirements</h2>
+<ul><li>Use stationary receivers for drips; moving receivers are not supported by the drip setup.</li><li>Use a non-convex MeshCollider on each receiving renderer's GameObject. This collider setup is for non-physics objects under Unity Physics rules.</li><li>Enable mesh <strong>Read/Write</strong> where needed so raycasts can provide hit texture coordinates.</li></ul>
+<p>See <a href="drips.html">Drips</a> for the complete scene setup.</p></main></body></html>

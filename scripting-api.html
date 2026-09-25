@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Scripting API - Spray Projector</title><link rel="stylesheet" href="documentation.css"></head><body><main><nav><a href="index.html">Spray Projector documentation</a> <a href="TableOfContents.html">Contents</a></nav><h1>Scripting API</h1>
+<p><a href="index.html">Guide home</a> / Scripting API</p>
+<p>This page is for developers connecting tools and UI. For Inspector setup, start with <a href="getting-started.html">Getting started</a>.</p>
+<p>Runtime types use <code>Assets.SprayProjector.Scripts</code>. Binary packages include public API documentation in <code>Runtime/Plugins/SprayProjector.Scripts.xml</code>.</p>
+<h2>Drive a projector</h2>
+<p>Call one appropriate action each frame according to your input state. The following are separate usage examples, not a sequence to execute together.</p>
+<pre><code class="language-csharp">
+// While aiming:
+projector.PreviewProjection(Color.white);
+
+// While painting: alpha supplies raw pressure.
+projector.Paint(new Color(1f, 0.1f, 0.05f, pressure));
+
+// Or supply finish properties as RGB: metalness, smoothness, wetness.
+projector.Paint(color, new Color(metalness, smoothness, wetness));
+
+// When painting ends:
+projector.Stop();
+</code></pre>
+<p>Paint() without arguments uses the projector's component color and finish values. Input alpha below 0.01 calls Stop(). Stop resets stroke interpolation, selection, and preview state controlled by that projector.</p>
+<p>Initialization and receiver preparation are asynchronous across frames. Calls made before readiness do not necessarily produce a mark; keep driving the tool while input is active.</p>
+<table><thead><tr><th>API</th><th>Use</th></tr></thead><tbody>
+<tr><td>Settings</td><td>Assign a PaintSettings asset; the setter reinitializes the projector</td></tr>
+<tr><td>EraseMode</td><td>Makes Paint erase within the projected mark</td></tr>
+<tr><td>OverrideProfileTexture</td><td>Overrides the settings profile; null restores the settings profile</td></tr>
+<tr><td>OverrideOrthogonalSize</td><td>Overrides orthogonal size; null restores the settings size</td></tr>
+<tr><td>ClearTarget()</td><td>Releases textures on the receiver hit by a forward ray up to 2 m; preserves saved files</td></tr>
+</tbody></table>
+<h2>Emit drips</h2>
+<p>Call during painting after the scene's drip components have initialized:</p>
+<pre><code class="language-csharp">
+dripEmitter.DetectDrip(color, new Color(metalness, smoothness, wetness));
+</code></pre>
+<p>The overloads without explicit finish data use the emitter's component values. Detection requires a registered drip surface, Allow Drips, and a ready receiver; see <a href="drips.html">Drips</a>.</p>
+<h2>Prepare and load a receiver</h2>
+<p>GetReadyToPaint() is a polling entry point: it prepares textures and starts loading when needed, returning false until the receiver can accept paint. Call again on later frames; do not busy-wait in the same frame.</p>
+<p>LoadDataToPaintTask() expects existing paint render textures. Calling it on a cold receiver does not allocate those textures.</p>
+<pre><code class="language-csharp">
+// Reload an already prepared receiver when it is not busy.
+if (receiver.GetReadyToPaint())
+{
+    await receiver.LoadDataToPaintTask();
+}
+</code></pre>
+<p>LoadPreviewDataTask() loads and applies the saved low-resolution preview and returns a success flag. SetPreview() only reapplies already-existing preview textures; it does not load or generate them.</p>
+<h2>Save and manage the scene</h2>
+<table><thead><tr><th>API</th><th>Behavior</th></tr></thead><tbody>
+<tr><td>ReceiversManager.Instance.SaveAll()</td><td>Starts the manager's save queue; returns without starting a new queue if the manager is busy</td></tr>
+<tr><td>ReceiversManager.Instance.ReloadDirtyReceivers()</td><td>Reloads dirty receivers that are not busy</td></tr>
+<tr><td>ReceiversManager.Instance.PreviewAll()</td><td>Switches receivers to saved previews and releases full textures</td></tr>
+<tr><td>receiver.SaveChain(preview: true)</td><td>Coroutine for saving one receiver and updating its preview</td></tr>
+<tr><td>receiver.ExportToPNG(directory)</td><td>Async-void color-image export; requires an existing paint texture, GPU readback, and writable output directory</td></tr>
+</tbody></table>
+<p>Call manager APIs only when Instance exists. Use its saving events and progress fields for UI feedback. A receiver's SaveChain skips saving when busy, saving is disallowed, GPU readback is unsupported, or no changes are marked.</p>
+<p>From a MonoBehaviour coroutine, a single-receiver save can be driven with:</p>
+<pre><code class="language-csharp">
+yield return StartCoroutine(receiver.SaveChain(preview: true));
+</code></pre>
+<h2>Clear deliberately</h2>
+<ul><li>ClearReceivers(false) releases full textures and retains saved files and preview textures.</li><li>ClearReceivers(true) also resets receivers and deletes their saved files.</li><li>receiver.ClearStorage() deletes saved files without itself releasing live textures.</li><li>receiver.DestroyTextures(true) releases live and preview textures without deleting files.</li></ul>
+<p>Read <a href="saving-and-loading.html">Saving and loading</a> for IDs, layout compatibility, storage location, and save precision. Internal jobs and Editor implementation types are outside this API guide.</p></main></body></html>

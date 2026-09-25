@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Saving and loading - Spray Projector</title><link rel="stylesheet" href="documentation.css"></head><body><main><nav><a href="index.html">Spray Projector documentation</a> <a href="TableOfContents.html">Contents</a></nav><h1>Saving and loading</h1>
+<p><a href="index.html">Guide home</a> / Saving and loading</p>
+<p><strong>Goal:</strong> keep painted work between sessions and understand which clear operations remove it.</p>
+<h2>Prepare each receiver</h2>
+<ol><li>Enable <strong>Allow Saving</strong>.</li><li>In the PaintReceiver component menu, choose <strong>Generate New ID</strong> if its ID is empty.</li><li>Give every independently saved receiver a unique ID. Duplicating a configured object also duplicates its ID, so generate a new one for the copy.</li><li>You can open <code>Window/UI Toolkit/Paint Tools</code>. It allows you to generate ID and UV World Scale by one click for all objects on your scene.</li></ol>
+<p>Keep IDs stable after saving. Empty IDs or invalid filename characters disable saving. Receivers with the same ID use the same save filenames.</p>
+<p>Saved files go to Unity's <code>Application.persistentDataPath</code>, not the project asset folder. Saving requires asynchronous GPU readback support on hardware; the receiver disables saving if the device does not support it.</p>
+<h2>Save and verify</h2>
+<p>Use one <code>ReceiversManager</code> for scene-wide operations. In the demo:</p>
+<ol><li>Paint a recognizable mark.</li><li>Choose <strong>Save</strong> and wait for saving to finish.</li><li>Moving Main Camera far away from Receivers also force saving per Distance Culling settings in the manager.</li><li>Add another mark without saving.</li><li>Choose <strong>Reload</strong> to reload saved data for receivers with unsaved changes.</li></ol>
+<p>Reload is connected to <code>ReloadDirtyReceivers()</code>: it does not force every receiver in the scene to reload. A developer can connect custom UI using <a href="scripting-api.html">the scripting reference</a>.</p>
+<p>Automatic periodic saving is off by default. The manager's <strong>Save Queue Interval</strong> enables it only at values of <strong>10 seconds or more</strong>. Do not assume stopping Play Mode saves your work.</p>
+<h2>Understand the two previews</h2>
+<table><thead><tr><th>Preview type</th><th>Purpose</th></tr></thead><tbody>
+<tr><td>Projector aiming preview</td><td>Shows the mark before you paint; controlled by PreviewProjection</td></tr>
+<tr><td>Saved-paint preview</td><td>Displays a lighter copy of previously saved paint without keeping full paint render textures allocated</td></tr>
+</tbody></table>
+<p>Saved previews use half the width and height of the full texture, with four bits per color channel. They can look softer or show more banding. Returning to painting prepares the full textures and loads saved data.</p>
+<p>The demo's <strong>Preview</strong> button calls <code>PreviewAll()</code>, which can save dirty receivers and release their full render textures. It is not an aiming-preview toggle. Save-enabled receivers are required for this workflow to preserve unsaved work.</p>
+<p>The receiver's <strong>Allow Loading Preview On Start</strong> field is currently declared but not read by the implementation. Do not rely on that checkbox alone; use the manager or an explicit preview-load call.</p>
+<h2>Clear without surprises</h2>
+<table><thead><tr><th>Operation</th><th>Current textures</th><th>Saved files</th></tr></thead><tbody>
+<tr><td>Projector ClearTarget()</td><td>Releases paint and preview textures on the receiver hit within 2 m</td><td>Kept</td></tr>
+<tr><td>Manager ClearReceivers(false)</td><td>Releases full paint textures; retains preview textures</td><td>Kept</td></tr>
+<tr><td>Manager ClearReceivers(true)</td><td>Releases textures and resets receivers</td><td>Deleted</td></tr>
+<tr><td>Receiver ClearStorage()</td><td>Does not itself release current textures</td><td>Deleted</td></tr>
+</tbody></table>
+<p><strong>The demo's Clear button calls ClearReceivers(true), deleting saved paint for registered receivers.</strong> Back up files before using it if you want to keep the artwork.</p>
+<p>Releasing textures discards unsaved texture contents. If saved files remain, painting or loading can bring their contents back.</p>
+<h2>Export an image</h2>
+<p><code>ExportToPNG(directory)</code> exports the receiver's current paint-color texture, using the seam-extended texture when Fix Seams is enabled. Prepare the full paint textures first and provide an existing, writable output directory.</p>
+<p>PNG export requires asynchronous GPU readback. It does not export the complete material, mesh, or additional paint data, and is not the package's reloadable save format.</p>
+<p><strong>Color HQ is a runtime precision setting:</strong> the full save path converts paint to 8-bit-per-channel data, so it does not preserve the full precision of the 16-bit runtime color texture.</p>
+<p>Related: <a href="troubleshooting.html">Troubleshooting</a>.</p></main></body></html>

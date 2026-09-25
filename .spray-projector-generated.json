@@ -1,0 +1,72 @@
+{
+    "formatVersion":  1,
+    "package":  "com.stencg.sprayprojector",
+    "packageVersion":  "1.0.0",
+    "unityVersion":  "6000.3",
+    "files":  [
+                  {
+                      "path":  ".nojekyll",
+                      "sha256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+                  },
+                  {
+                      "path":  "documentation.css",
+                      "sha256":  "AA66E703392CCDE6B366A80D7900E1A1C4906FBAFA5CCAE98044D5B177D6FDC6"
+                  },
+                  {
+                      "path":  "drips.html",
+                      "sha256":  "18AB1D0ED3233B12E897BDE8A7806AFED6951F22876369D65254F0E11010278D"
+                  },
+                  {
+                      "path":  "getting-started.html",
+                      "sha256":  "87D5847649A7423892FADF04C51AFDBE1623834291971EE313CF7D12425681B5"
+                  },
+                  {
+                      "path":  "index.html",
+                      "sha256":  "B3E003CFD8C76EF3FFDCD5FE947FB05D159A884FD554EBFCDACB6FFD97260652"
+                  },
+                  {
+                      "path":  "paintable-surfaces.html",
+                      "sha256":  "73EB40DC8FE7A879FE0E36DEAA8136F5E463A7AED3D31D582C79B0FEC58EE271"
+                  },
+                  {
+                      "path":  "paint-system-components.html",
+                      "sha256":  "B8031472A090756C101143C22BA6B7093CD8875939F9B8C455B071C68FB41A49"
+                  },
+                  {
+                      "path":  "performance-and-platforms.html",
+                      "sha256":  "4FCEE04E63259D5DD6AA8A4812B540D6479B5E1B3968B4323C0B4217E0472C4D"
+                  },
+                  {
+                      "path":  "projectors-and-paint-settings.html",
+                      "sha256":  "616F1A9515774AC30D3E937FA25167E5E65490C7D36EED8C93C8CBB861499721"
+                  },
+                  {
+                      "path":  "README.md",
+                      "sha256":  "59FE26E3A369853D64911E4B7BC8B65D5F3ACF343DDD54D8C4CF7D80CB5C1472"
+                  },
+                  {
+                      "path":  "requirements-and-compatibility.html",
+                      "sha256":  "117EE57BE517B4BEFC6308362A39EE5955FDBAC5984C1D897B014D30C83DE87E"
+                  },
+                  {
+                      "path":  "sample-exploration.html",
+                      "sha256":  "3C2720902129F921D892B32470DDB6CB09473BF73EBEE446A2FB1F47FAB598E3"
+                  },
+                  {
+                      "path":  "saving-and-loading.html",
+                      "sha256":  "8ED7C8C263FE733BA274E8B9F4FFE3D5FADC4C81901BB5DB320BABD2EEFBDBD5"
+                  },
+                  {
+                      "path":  "scripting-api.html",
+                      "sha256":  "6C8F795CD4D4D8C034B8BDE3F970701607E4863A13D79925A1A4C818811769A5"
+                  },
+                  {
+                      "path":  "TableOfContents.html",
+                      "sha256":  "B35AC6675F2AB8ABDCEC098DA4EE7A47743DA05E311FF565964CB214C6467477"
+                  },
+                  {
+                      "path":  "troubleshooting.html",
+                      "sha256":  "383D9FC439589B3D7C6FFCF7AED0FB9F450D652694A39ECFA21C0E6D5F6B44F2"
+                  }
+              ]
+}

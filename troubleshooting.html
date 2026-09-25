@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Troubleshooting - Spray Projector</title><link rel="stylesheet" href="documentation.css"></head><body><main><nav><a href="index.html">Spray Projector documentation</a> <a href="TableOfContents.html">Contents</a></nav><h1>Troubleshooting</h1>
+<p><a href="index.html">Guide home</a> / Troubleshooting</p>
+<p>Start with a single receiver and tool. Check the Console before changing visual settings.</p>
+<h2>Nothing is painted</h2>
+<ol><li>Confirm PaintProjector and PaintReceiver are enabled.</li><li>Check their Settings references and the receiver's two compute shader references.</li><li>Confirm the controller calls Paint repeatedly while input is held; adding the projector alone does not spray.</li><li>Check that input alpha is at least 0.01 and Pressure Multiplier is not zero.</li><li>Aim +Z toward the collider, within the configured clip range.</li><li>Include the collider's layer in the projector's Layers mask.</li><li>Use a Paint Receiver material and valid second-channel paint UVs.</li><li>Allow warmup/loading to finish.</li></ol>
+<p>For a child or separate collider, use a registered renderer/MeshCollider pair or PaintReceiverProxy. Arbitrary parent lookup is not automatic.</p>
+<h2>The receiver disables itself</h2>
+<p>Missing Receiver Settings produces an error and disables the component. Assign the settings asset, check its processing resources, and re-enable PaintReceiver.</p>
+<h2>The projector disables itself during initialization</h2>
+<p>Check its Paint Settings and Paint Shader. The current implementation also performs an asynchronous license check during initialization. If the Console reports <strong>Projector initialization failed.</strong>, ask the package maintainer to check the license setup.</p>
+<h2>Marks repeat, smear, or land in the wrong place</h2>
+<p>Check <strong>UV1 / mesh.uv2</strong>, the channel used by the paint-writing shaders. Overlapping islands repeat paint; a missing or unsuitable second UV channel cannot be fixed by changing Pixels Per Unit.</p>
+<p>If several renderers share a receiver, check their combined UV layout. The UV-scale calculator's UV0 fallback is only a measurement fallback.</p>
+<h2>Thin strokes or drips disappear</h2>
+<p>Increase receiver resolution within a practical texture budget, or use a wider profile or Drip Size. Check whether Maximum Texture Dimension is already capping the result.</p>
+<p>For visible seams, try Fix Seams, check the extension shader, and remove negative local scale. Seam fixing affects paint color, not the additional-data texture.</p>
+<h2>Drips do not appear</h2>
+<ul><li>Add both PaintDripSystem and PaintDripRenderer.</li><li>Check the drip shader and profile.</li><li>Call DetectDrip each frame while painting.</li><li>Use a non-convex MeshCollider on the receiving renderer's GameObject.</li><li>Check mesh Read/Write where needed and enable Allow Drips again if initialization turned it off.</li><li>Move within the emitter's Ray Distance; its default is only 0.07 m.</li><li>Check emitter Layers, opacity, nozzle angle, and slow movement.</li></ul>
+<p>After one emission, move the nozzle slightly to release the emitter's lock. See <a href="drips.html">Drips</a>.</p>
+<h2>Preview behaves unexpectedly</h2>
+<p>Distinguish the aiming preview from a saved-paint preview. PreviewProjection controls the former; the demo Preview button controls the latter.</p>
+<p>For competing aiming previews, check Preview Importance. Stop clears preview state controlled by that projector. For a blurry saved preview, return to painting to prepare full textures.</p>
+<h2>Paint comes back after clearing</h2>
+<p>ClearTarget releases textures but keeps saved files. The next load can restore them. Use the appropriate permanent clear operation only if you intend to delete the saved artwork; see <a href="saving-and-loading.html">Saving and loading</a>.</p>
+<h2>Saving or reloading fails</h2>
+<p>Check unique, stable receiver IDs, Allow Saving, both compute shaders, GPU readback support, and writable persistent storage. Wait for any current save or load to finish.</p>
+<p>Keep UV layout, UV World Scale, texture aspect ratio, Pixels Per Unit, and Maximum Texture Dimension consistent with the saved artwork. The demo Reload action handles dirty receivers only.</p>
+<h2>The sample UI or mouse tools do not respond</h2>
+<p>Install uGUI and match the EventSystem module to Active Input Handling. Keep only one UI input module enabled. For legacy-only input, remove a missing Input System component if present.</p>
+<p>Check a MainCamera-tagged camera for mouse raycasts, and inspect the controller's Unity Events and button On Click bindings for missing methods. See <a href="sample-exploration.html">Sample exploration</a>.</p></main></body></html>

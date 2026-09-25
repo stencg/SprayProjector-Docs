@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Set up your own scene - Spray Projector</title><link rel="stylesheet" href="documentation.css"></head><body><main><nav><a href="index.html">Spray Projector documentation</a> <a href="TableOfContents.html">Contents</a></nav><h1>Set up your own scene</h1>
+<p><a href="index.html">Guide home</a> / Getting started</p>
+<p><strong>Goal:</strong> paint onto one surface, then reuse that setup. For a first installation, start with <a href="sample-exploration.html">the Spray Demo</a>, which already connects painting, input, and UI.</p>
+<h2>1. Create your settings assets</h2>
+<ol><li>In the Project window, choose a folder under <code>Assets</code> for your own settings.</li><li>Use <strong>Assets &gt; Create &gt; Spray Projector &gt; Paint Settings</strong>.</li><li>Use <strong>Assets &gt; Create &gt; Spray Projector &gt; Receiver Settings</strong>.</li><li>Select each asset and check its references using the table below.</li></ol>
+<p>The Editor fills missing package shader, compute, and noise references when these assets are imported. It does not choose a paint profile for you. Duplicating an imported demo settings asset is also a useful starting point.</p>
+<p>Create your project's settings under <code>Assets</code>, or duplicate the imported demo settings. <code>SampleReceiverSettings.asset</code> belongs to the optional sample; assign settings explicitly to your own receivers.</p>
+<table><thead><tr><th>Asset</th><th>Check in the Inspector</th></tr></thead><tbody>
+<tr><td>Paint Settings</td><td>Paint Shader uses <code>PaintProjector.shader</code>; assign a Profile Texture for the mark.</td></tr>
+<tr><td>Receiver Settings</td><td>Paint Shader also uses <code>PaintProjector.shader</code>; Extend Uv Island Shader uses <code>DilatingUv.shader</code>; <code>TextureToBuffer16.compute</code> and <code>TextureToBuffer32.compute</code> assigned to their matching fields.</td></tr>
+</tbody></table>
+<p>The Receiver Settings <strong>Paint Shader</strong> is a processing shader, not the Lit or Unlit shader used by the visible surface material. Both compute references are required by receiver initialization.</p>
+<h2>2. Prepare one surface</h2>
+<ol><li>Use a mesh with non-overlapping islands inside the 0-1 tile.</li><li>Assign a material using one of the supplied Paint Receiver shaders: <code>PaintReceiverLit</code> and <code>PaintReceiverUnlit</code>. A normal URP Lit material alone does not display accumulated paint.</li><li>Add <code>PaintReceiver</code> component on surface GameObject and assign Receiver Settings asset.</li><li>Check its Renderers list. An empty list automatically collects renderers on the object and its active children.</li><li>Add a collider. For the simplest setup, keep the collider, renderer, and receiver on the same GameObject.</li><li>In the PaintReceiver component menu, choose <strong>Calculate UV World Scale</strong>.</li><li>Turn off <strong>Allow Drips</strong> if you do not need them.</li><li>For saving, choose <strong>Generate New ID</strong> once and keep that ID stable on your scene.</li></ol>
+<h2>3. Prepare group of surfaces</h2>
+<ol><li>Prepare meshes so they share single UV tile space and similar scale. It allows you to use single <code>PaintReceiver</code> for a group for shared paint texture.</li><li>In <code>PaintReceiver</code>, check its Renderers list and set directly required to paint renderers to prevent automatic collecting.</li><li>Set colliders to each Renderer.</li></ol>
+<p>See <a href="paintable-surfaces.html">Paintable surfaces</a> for collider variants, UV preparation, and seam settings.</p>
+<p>The PaintReceiver context menu includes <strong>Calculate UV World Scale</strong> and <strong>Generate New ID</strong>. For batch setup across open scenes, use <strong>Window &gt; UI Toolkit &gt; Paint Tools</strong>.</p>
+<p><strong>If Receiver Settings was missing when the component initialized:</strong> assign it, then re-enable the component. It disables itself after logging an error.</p>
+<h2>4. Add a painting projector</h2>
+<ol><li>Add <code>PaintProjector</code> to a nozzle GameObject and assign your Paint Settings.</li><li>Point its local forward axis (+Z) toward the surface.</li><li>Set its <strong>Layers</strong> mask to include the surface's collider layer. The default mask includes only the Default layer.</li><li>Place the surface between the Near Clip and Far Clip distances in Paint Settings.</li><li>Connect a controller like in supplied Sample that calls <code>Paint(...)</code> while painting and <code>Stop()</code> when painting ends.</li></ol>
+<p>Adding a projector alone does not make it spray. Reuse the demo's connected tool prefab, or ask a developer to connect your input using the <a href="scripting-api.html">Scripting API</a>. Aiming preview uses <code>PreviewProjection(...)</code>.</p>
+<h2>5. Test the result</h2>
+<p>Enter Play Mode, aim at the surface, and paint a slow stroke. Move the tool to check that the mark stays attached to the mesh. Test edges and UV seams, then tune the <a href="projectors-and-paint-settings.html">paint style</a>.</p>
+<p>Initialization and loading can take time; the first paint call may only prepare the receiver. Continue calling Paint while the input is held.</p>
+<h2>Add optional features</h2>
+<table><thead><tr><th>Feature</th><th>Add</th></tr></thead><tbody>
+<tr><td>Scene-wide saving, saved previews, and distance-based texture management</td><td>One <code>ReceiversManager</code>, with Main Camera assigned for distance management</td></tr>
+<tr><td>Running paint</td><td>One <code>PaintDripSystem</code>, one <code>PaintDripRenderer</code>, and a nozzle <code>PaintDripEmitter</code></td></tr>
+<tr><td>A separate collider object for ordinary painting</td><td><code>PaintReceiverProxy</code>, referencing the receiver</td></tr>
+</tbody></table>
+<p>Next: <a href="paintable-surfaces.html">Prepare paintable surfaces</a>.</p></main></body></html>

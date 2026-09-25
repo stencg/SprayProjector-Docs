@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Projectors and paint settings - Spray Projector</title><link rel="stylesheet" href="documentation.css"></head><body><main><nav><a href="index.html">Spray Projector documentation</a> <a href="TableOfContents.html">Contents</a></nav><h1>Projectors and paint settings</h1>
+<p><a href="index.html">Guide home</a> / Projectors and paint settings</p>
+<p><strong>Goal:</strong> turn a working painting tool into the spray, marker, or stamp style you want.</p>
+<h2>Decide where to edit</h2>
+<table><thead><tr><th>Edit here</th><th>To change</th></tr></thead><tbody>
+<tr><td>Paint Settings asset</td><td>Profile, projection shape, pressure response, softness, overspray, and stroke interpolation</td></tr>
+<tr><td>PaintProjector component</td><td>Settings assignment, color, pressure multiplier, metalness, smoothness, wetness, layers, and occlusion</td></tr>
+<tr><td>Receiver and its material</td><td>Paint texture resolution, surface appearance, seam handling, and drying support</td></tr>
+</tbody></table>
+<p>Settings assets are shared. Duplicate a settings asset under <code>Assets</code> before making a separate style for another tool. Restart Play Mode or reassign the projector's Settings through your controller if an edit is not reflected; some values are copied during initialization.</p>
+<h2>Shape the mark</h2>
+<table><thead><tr><th>Desired result</th><th>Controls to try</th></tr></thead><tbody>
+<tr><td>A wider perspective spray</td><td>Increase Angle; compare at the same nozzle distance and pressure.</td></tr>
+<tr><td>A stamp or marker with a fixed projection width</td><td>Enable Orthogonal and adjust Orthogonal Size.</td></tr>
+<tr><td>A different mark silhouette</td><td>Assign Profile Texture. Its aspect ratio affects the projection.</td></tr>
+<tr><td>Room for mist around the main mark</td><td>Reduce Profile Scale and enable Overspray.</td></tr>
+<tr><td>A different near-nozzle cone shape</td><td>Adjust Projection Apex Offset. This is a perspective shape control.</td></tr>
+<tr><td>Denser paint farther from the nozzle</td><td>Increase Density Apex Offset. This changes perspective density independently of the cone shape.</td></tr>
+<tr><td>A shorter working range</td><td>Reduce Far Clip; check its pressure curve too.</td></tr>
+</tbody></table>
+<p>Near Clip and Far Clip limit where paint reaches the surface. The apex offsets are ignored for orthogonal projection.</p>
+<h2>Tune opacity and surface finish</h2>
+<p>Pressure is passed into the projector as the paint color's alpha. <strong>Pressure Curve</strong> changes its response; <strong>Pressure Multiplier</strong> on the projector supplies an additional multiplier.</p>
+<p>During paint rendering, both Angle Factor Curve and Far Clip Curve use pressure after Pressure Curve and Pressure Multiplier, with interpolation between stroke samples. The Angle Factor Curve tooltip describes raw pressure, but the current drawing code uses the processed value. Receiver-detection raycasts evaluate Far Clip Curve with raw input alpha, so unusual curves can produce a difference between detection range and the rendered mark. When comparing styles, keep input pressure and distance consistent.</p>
+<ul><li>Use <strong>Dark Paint Compensation</strong> if dark paint looks too transparent.</li><li>Use <strong>Bright Paint Compensation</strong> if bright paint needs more coverage.</li><li>Adjust <strong>Metalness</strong>, <strong>Smoothness</strong>, and <strong>Wetness</strong> on the projector for the finish.</li><li>Enable the receiver's additional texture and drying features as needed to display those effects.</li></ul>
+<p>Input alpha below <code>0.01</code> stops painting. This threshold is checked before the pressure curve.</p>
+<h2>Tune softness and motion</h2>
+<table><thead><tr><th>Control</th><th>What it changes</th></tr></thead><tbody>
+<tr><td>Noise and Noise Texture</td><td>Variation in the deposited paint</td></tr>
+<tr><td>Blur By Depth and Max Blur Size</td><td>Profile blur as depth increases</td></tr>
+<tr><td>Mip Bias</td><td>Profile texture mip sampling; compare alongside depth blur</td></tr>
+<tr><td>Fade By Depth</td><td>Depth-based fading</td></tr>
+<tr><td>Interpolation Step Size</td><td>Spacing between paint samples as the nozzle moves</td></tr>
+<tr><td>Max Interpolation Distance</td><td>Distance beyond which a movement is treated as a jump</td></tr>
+<tr><td>No Interpolation</td><td>Disables the interpolated stroke path</td></tr>
+<tr><td>Maximum Updating Interval Hz</td><td>Paint update cadence, which also affects accumulation</td></tr>
+<tr><td>Shadow Resolution</td><td>Projector occlusion texture resolution</td></tr>
+</tbody></table>
+<p>Use slow lines, fast lines, dots, and strokes across a corner to judge a style. Smaller sample spacing can reduce gaps but increases drawing work.</p>
+<h2>Preview, erase, and clear</h2>
+<p>A controller calls <code>PreviewProjection(color)</code> while aiming. <strong>Preview Strength</strong> controls its visibility. When projectors compete for a receiver's preview, higher Preview Importance takes priority.</p>
+<p><strong>Erase Mode</strong> makes Paint remove paint within the projected mark. <code>Stop()</code> ends the stroke and clears preview state controlled by that projector.</p>
+<p><code>ClearTarget()</code> releases the hit receiver's current paint and preview textures using a forward ray up to <strong>2 metres</strong>. It does not delete saved files; saved paint can return on the next load. For permanent clearing, see <a href="saving-and-loading.html">Saving and loading</a>.</p>
+<p>Next: <a href="drips.html">Add drips</a>, or <a href="saving-and-loading.html">save your paint</a>.</p></main></body></html>

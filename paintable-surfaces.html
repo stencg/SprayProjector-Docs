@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Paintable surfaces - Spray Projector</title><link rel="stylesheet" href="documentation.css"></head><body><main><nav><a href="index.html">Spray Projector documentation</a> <a href="TableOfContents.html">Contents</a></nav><h1>Paintable surfaces</h1>
+<p><a href="index.html">Guide home</a> / Paintable surfaces</p>
+<p><strong>Goal:</strong> prepare a mesh that holds paint in the correct place, at a useful resolution.</p>
+<h2>Choose a receiver material</h2>
+<p>Use one of the supplied Paint Receiver materials or create a material from the package's Lit or Unlit Shader Graph: <code>PaintReceiverLit</code> and <code>PaintReceiverUnlit</code>. The package also includes an optimized Lit shader. These shaders are in the package's <code>Packages/Spray Projector/Runtime/Shaders</code> folder.</p>
+<p>The visible material must support the package's paint properties, including <code>_PaintTexture</code> and, for additional paint data, <code>_PaintMetallic</code>. Assigning a standard URP material does not add this support.</p>
+<h2>Prepare the paint UVs</h2>
+<p><strong>Painting automatically uses UV1 or, if exists, the second UV channel, called <code>mesh.uv2</code> in Unity's scripting API.</strong> The supplied paint-writing shaders read this channel directly.</p>
+<ul><li>Keep paint UV islands within the 0–1 tile.</li><li>Consider to add a second UV channel if the first one is outside tile.</li><li>Avoid overlapping islands unless you deliberately want the same paint to appear in multiple places.</li><li>Leave at least 4 px padding between islands to reduce bleeding at seams.</li><li>Keep a reasonably consistent UV scale so strokes have similar sharpness across the surface.</li><li>If several renderers share one receiver, they also share its paint textures. Arrange their paint UVs accordingly, or use separate receivers.</li></ul>
+<p>The <strong>Calculate UV World Scale</strong> tool measures UV1 when present and falls back to UV0 for its calculation. That fallback does not change which UV channel the shaders paint into.</p>
+<h2>Set paint resolution</h2>
+<ol><li>Open the PaintReceiver component menu and choose <strong>Calculate UV World Scale</strong>.</li><li>Check <strong>UV World Scale</strong> and <strong>Paint Textures Aspect Ratio</strong> on the receiver.</li><li>Set <strong>Pixels Per Unit</strong> and <strong>Maximum Texture Dimension</strong> in Receiver Settings.</li><li>Paint thin and broad strokes at the expected viewing distance.</li></ol>
+<p>The scale calculator reads a MeshFilter on the receiver's own GameObject and requires a readable mesh. It does not search child meshes or average the Renderers list. For a receiver on an empty parent, set UV World Scale from the child meshes' intended scale and check the result on the group.</p>
+<p>More pixels make fine marks easier to see but cost texture memory. The maximum dimension caps the result, so increasing Pixels Per Unit may eventually stop improving sharpness.</p>
+<p><strong>Finalize resolution and UV layout before saving production paint.</strong> Changing them later can make old data incompatible or move marks onto different parts of the mesh.</p>
+<h2>Connect the collider</h2>
+<table><thead><tr><th>Surface setup</th><th>What to use</th></tr></thead><tbody>
+<tr><td>Simple paintable object</td><td>Collider and PaintReceiver on the same GameObject</td></tr>
+<tr><td>Child mesh under a receiver</td><td>MeshCollider on the listed renderer's GameObject; the receiver registers this pair</td></tr>
+<tr><td>Separate collision object for ordinary painting</td><td>PaintReceiverProxy on the collider object, with Receiver assigned</td></tr>
+<tr><td>Surface that receives drips</td><td>Non-convex MeshCollider on each receiving renderer's GameObject, plus Allow Drips</td></tr>
+</tbody></table>
+<p>A parent receiver is not discovered by an unrestricted search up the hierarchy. Use the registered renderer/MeshCollider pair or an explicit proxy where needed.</p>
+<p>For drips, enable mesh <strong>Read/Write</strong> where needed for valid mesh hit data. Start with stationary geometry and see <a href="drips.html">Drips</a>. A proxy alone does not register a drip surface.</p>
+<h2>Fix seams and control occlusion</h2>
+<table><thead><tr><th>Control</th><th>Effect</th></tr></thead><tbody>
+<tr><td>Fix Seams</td><td>Extends paint color around UV islands; allocates another texture and requires the extension shader. It does not fix the additional-data texture.</td></tr>
+<tr><td>Allow Additional Texture</td><td>Stores extra paint properties. Fix Seams also requires this texture; drying can allocate it temporarily.</td></tr>
+<tr><td>Color HQ</td><td>Uses a 16-bit floating-point channel format for the main paint texture instead of 8-bit channels.</td></tr>
+<tr><td>Occluder</td><td>Includes this receiver in projector occlusion.</td></tr>
+<tr><td>Alpha To Occlusion</td><td>Uses the base texture's alpha for receiver occlusion when Occluder is enabled.</td></tr>
+<tr><td>DisablePaintOcclusion</td><td>Add to a renderer's GameObject to exclude it from projector occlusion.</td></tr>
+</tbody></table>
+<p>Negative local scale disables Fix Seams during initialization. Correct the mesh or transform before relying on seam fixing.</p>
+<p>Next: <a href="projectors-and-paint-settings.html">Tune projectors and paint settings</a>.</p></main></body></html>

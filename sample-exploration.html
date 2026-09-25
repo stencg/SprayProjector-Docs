@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Install Spray package and try sample - Spray Projector</title><link rel="stylesheet" href="documentation.css"></head><body><main><nav><a href="index.html">Spray Projector documentation</a> <a href="TableOfContents.html">Contents</a></nav><h1>Install Spray package and try sample</h1>
+<p><a href="index.html">Guide home</a> / Spray Demo</p>
+<p><strong>Goal:</strong> explore working tools before building a custom scene.</p>
+<h2>Install and import sample</h2>
+<ol><li>Install Spray Projector package in a URP project via UPM from disk.</li><li>In Package Manager, select Spray Projector, Samples tab and import <strong>Spray Demo</strong>.</li><li>Open <code>SampleScene.unity</code> from <code>Assets/Samples/Spray Projector/&lt;installed version&gt;/Spray Demo/</code>.</li></ol>
+<p>Imported samples are editable copies. Changes to them do not update the package.</p>
+<h2>Set up input on SampleScene</h2>
+<table><thead><tr><th>Project input setting</th><th>EventSystem Game Object</th></tr></thead><tbody>
+<tr><td>Input System enabled</td><td>Enable InputSystemUIInputModule component and disable StandaloneInputModule</td></tr>
+<tr><td>Legacy Input Manager only</td><td>Enable StandaloneInputModule component and disable InputSystemUIInputModule</td></tr>
+</tbody></table>
+<p>Check <strong>Active Input Handling</strong> in Player Settings and keep one UI input module active. The sample selects its painting input backend automatically.</p>
+<p>With <strong>Both</strong> selected, the sample uses its Input System adapter, so keep <code>InputSystemUIInputModule</code> enabled. If Input System is not installed for a legacy-only project, remove its missing component from the imported EventSystem. The backend does not change project settings automatically.</p>
+<p>The imported sample is an editable copy, not a live link to the package sample. Keep only one imported version to avoid duplicate assemblies and asset GUIDs. Preserve local changes before reimporting.</p>
+<h2>Explore the tools</h2>
+<p>Enter Play Mode and use the Game view.</p>
+<table><thead><tr><th>Tool or control</th><th>Try this</th></tr></thead><tbody>
+<tr><td>Spray can</td><td>Use the <strong>Spray</strong> animation control and compare the available cap profiles.</td></tr>
+<tr><td>Marker and Stamp</td><td>Enable the desired tool and hold the left mouse button over a paintable surface. The mouse wheel adjusts the size of tools.</td></tr>
+<tr><td>Drip</td><td>Enable the demo drip tool and use the left mouse button on a receiving surface. Try to combine it with the marker.</td></tr>
+<tr><td>Erase Mode</td><td>Enable it and paint over an existing mark.</td></tr>
+<tr><td>Save</td><td>Store changed receiver data; wait for saving to finish.</td></tr>
+<tr><td>Reload</td><td>Paint more and restore saved data on receivers with unsaved changes.</td></tr>
+<tr><td>Preview</td><td>Switch to saved-paint previews; this can save changes and release full paint textures.</td></tr>
+<tr><td>Clear</td><td>Delete current and saved paint for registered receivers.</td></tr>
+</tbody></table>
+<p><strong>Clear deletes saved work.</strong> Use a disposable test drawing while exploring. Read <a href="saving-and-loading.html">Saving and loading</a> before using these controls on artwork you want to keep.</p>
+<h2>Inspect a working setup</h2>
+<p>Select a tool and follow its PaintProjector <strong>Settings</strong> reference to the style asset. Then select a receiving surface and inspect its material, PaintReceiver, Receiver Settings, UVs, and collider.</p>
+<p>The sample controllers use Unity Events to connect input to painting. If a button does nothing, check its On Click or controller event bindings for missing targets or methods as well as checking the input module.</p>
+<p>Copy or duplicate the working prefabs and settings into your own folders under <code>Assets</code> before adapting them.</p>
+<p>Next: <a href="getting-started.html">Set up your own scene</a>.</p></main></body></html>

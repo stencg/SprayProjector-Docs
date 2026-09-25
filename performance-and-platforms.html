@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Performance and platforms - Spray Projector</title><link rel="stylesheet" href="documentation.css"></head><body><main><nav><a href="index.html">Spray Projector documentation</a> <a href="TableOfContents.html">Contents</a></nav><h1>Performance and platforms</h1>
+<p><a href="index.html">Guide home</a> / Performance</p>
+<p><strong>Goal:</strong> keep the visual detail you need within the target device's texture memory and rendering budget.</p>
+<h2>Start with receiver textures</h2>
+<table><thead><tr><th>Control</th><th>Quality benefit</th><th>Cost or limitation</th></tr></thead><tbody>
+<tr><td>Pixels Per Unit and UV World Scale</td><td>More detail across a surface</td><td>Larger paint textures</td></tr>
+<tr><td>Maximum Texture Dimension</td><td>Allows larger textures before clamping</td><td>Higher possible memory use</td></tr>
+<tr><td>Color HQ</td><td>Smoother accumulation in the main paint texture</td><td>Main color texture uses 8 bytes per pixel instead of 4; total receiver memory does not simply double</td></tr>
+<tr><td>Fix Seams</td><td>Reduces visible color seams</td><td>Extra extended color texture and additional-data requirements</td></tr>
+<tr><td>Allow Additional Texture</td><td>Stores extra paint properties</td><td>Another texture; drying can allocate it temporarily even if disabled</td></tr>
+<tr><td>Saved previews</td><td>Display saved artwork with smaller textures</td><td>Reduced size and channel precision</td></tr>
+</tbody></table>
+<p>Doubling both texture dimensions roughly quadruples their pixel memory. Raise resolution only where it makes a visible difference at the expected viewing distance.</p>
+<h2>Reduce work per stroke</h2>
+<ul><li>Keep paintable meshes reasonably simple; painting draws their geometry again.</li><li>Limit material slots on receivers when possible.</li><li>On lower-end hardware such as Quest 3, painting more than 1,000 vertices of rendered receiver geometry in total for a stroke can significantly affect rendering performance; simplify paintable meshes and profile on the target.</li><li>Balance interpolation spacing in <code>PaintSettings - Interpolation Step Size</code> against visible gaps in fast strokes.</li><li>Use only the raycast layers the projector needs.</li><li>Add drips where the effect matters; their simulation performs extra raycasts and rendering.</li><li>Tune Shadow Resolution by comparing occlusion quality and cost.</li></ul>
+<h2>Manage larger scenes</h2>
+<p>ReceiversManager uses camera distance and a VRAM target to move receivers between full textures, saved previews, and released textures. Assign Main Camera, or provide a camera tagged MainCamera.</p>
+<p>This workflow relies on saving and valid receiver IDs to preserve artwork while releasing textures. <strong>Important Preview</strong> retains selected previews during relevant cleanup paths; it is not a promise that full-resolution paint textures stay allocated.</p>
+<p>The manager's memory figure is an estimate, not the device's total GPU memory usage.</p>
+<h2>Saving and Loading speed</h2>
+<p><code>ReceiverSettings</code> provide two important parameters to control texture bytes stream:</p>
+<ul><li><strong>Read Data Chunk</strong> - higher value provides higher speed of loading.</li></ul>
+<ul><li><strong>Write Data Chunk</strong> - higher value provides higher speed of saving.</li></ul>
+<p>For example, you want to double speed so increase those values x2.</p>
+<p>Remember <strong>The 85k Rule:</strong> chunk size requiring 85k bytes or more goes straight to the Large Object Heap memory (LOH). PaintRecievers use pooled array of bytes for chunks to prevent massive LOH bloating.</p>
+<h2>Other recommendations</h2>
+<ul><li>Warm up the shader variants used by your project before measuring first-use performance.</li><li>Define <code>DEBUG_SPRAY</code> for more detailed logs when diagnosing package behavior.</li></ul>
+<h2>Check the actual target</h2>
+<p>Use the Unity Profiler, Frame Debugger, GPU timing, and Memory Profiler in a target Player. Check both first use and repeated painting, saving, moving between distance bands, and simultaneous tools.</p>
+<p>For VR, also test the actual controller bindings and headset rendering. Editor results and successful builds do not establish mobile or Quest performance.</p>
+<p>Related: <a href="requirements-and-compatibility.html">Requirements</a> and <a href="saving-and-loading.html">Saving and loading</a>.</p></main></body></html>
