@@ -18,15 +18,15 @@
                   },
                   {
                       "path":  "getting-started.html",
-                      "sha256":  "87D5847649A7423892FADF04C51AFDBE1623834291971EE313CF7D12425681B5"
+                      "sha256":  "6A41010851F1C8C1C15DA419BBE85BC2528D98BC3AE68CAD40C7BA9FEBAF7DB2"
                   },
                   {
                       "path":  "index.html",
-                      "sha256":  "B3E003CFD8C76EF3FFDCD5FE947FB05D159A884FD554EBFCDACB6FFD97260652"
+                      "sha256":  "E942C2AE8FED0C0025A980FB39BBE0FEEF28CDFED0D72F1174F86076DAB0360E"
                   },
                   {
                       "path":  "paintable-surfaces.html",
-                      "sha256":  "73EB40DC8FE7A879FE0E36DEAA8136F5E463A7AED3D31D582C79B0FEC58EE271"
+                      "sha256":  "26B5D0AB87C0D448EC97BDF1B9186C7699A539C05DDB45F1CFF25590D8A4953E"
                   },
                   {
                       "path":  "paint-system-components.html",
@@ -41,16 +41,12 @@
                       "sha256":  "616F1A9515774AC30D3E937FA25167E5E65490C7D36EED8C93C8CBB861499721"
                   },
                   {
-                      "path":  "README.md",
-                      "sha256":  "59FE26E3A369853D64911E4B7BC8B65D5F3ACF343DDD54D8C4CF7D80CB5C1472"
-                  },
-                  {
                       "path":  "requirements-and-compatibility.html",
-                      "sha256":  "117EE57BE517B4BEFC6308362A39EE5955FDBAC5984C1D897B014D30C83DE87E"
+                      "sha256":  "4620B622FEFD75CC1795DF028F0F2B80F72D1B336BC68D038C6AC5090AB52992"
                   },
                   {
                       "path":  "sample-exploration.html",
-                      "sha256":  "3C2720902129F921D892B32470DDB6CB09473BF73EBEE446A2FB1F47FAB598E3"
+                      "sha256":  "91887EC70B55238E7FEAB06FE26A80D879B0E037478F667CA72D0DF4E2F73833"
                   },
                   {
                       "path":  "saving-and-loading.html",
@@ -66,7 +62,7 @@
                   },
                   {
                       "path":  "troubleshooting.html",
-                      "sha256":  "383D9FC439589B3D7C6FFCF7AED0FB9F450D652694A39ECFA21C0E6D5F6B44F2"
+                      "sha256":  "C84026784FD51D415DAC40028437129A8EFF1943115B4A6AE8DC6D31E37C5BE5"
                   }
               ]
 }

@@ -4,7 +4,9 @@
 <p><a href="index.html">Guide home</a> / Spray Demo</p>
 <p><strong>Goal:</strong> explore working tools before building a custom scene.</p>
 <h2>Install and import sample</h2>
-<ol><li>Install Spray Projector package in a URP project via UPM from disk.</li><li>In Package Manager, select Spray Projector, Samples tab and import <strong>Spray Demo</strong>.</li><li>Open <code>SampleScene.unity</code> from <code>Assets/Samples/Spray Projector/&lt;installed version&gt;/Spray Demo/</code>.</li></ol>
+<ol><li>Install Spray Projector in a Unity 6 project using URP or HDRP.</li><li>In Package Manager, import <strong>Spray Demo Common</strong>, then import <strong>Spray Demo URP</strong> or <strong>Spray Demo HDRP</strong> for the project's active pipeline.</li><li>Open <code>SampleScene.unity</code> from <code>Assets/Samples/Spray Projector/&lt;installed version&gt;/Spray Demo URP/</code>, or <code>SampleSceneHDRP.unity</code> from <code>Spray Demo HDRP/</code>.</li></ol>
+<p>Common contains the scripts, prefabs, settings, UI, and textures used by either scene. The pipeline sample contains its own receiver materials and scene. Importing a scene without Common leaves its shared references unresolved.</p>
+<p>An older imported <strong>Spray Demo</strong> can remain in the project while you try the new samples. The new layout uses distinct asset GUIDs and assembly names. Keep only the scenes you need in the build and avoid opening both demos together, since each scene creates its own input and paint controllers.</p>
 <p>Imported samples are editable copies. Changes to them do not update the package.</p>
 <h2>Set up input on SampleScene</h2>
 <table><thead><tr><th>Project input setting</th><th>EventSystem Game Object</th></tr></thead><tbody>
@@ -13,7 +15,7 @@
 </tbody></table>
 <p>Check <strong>Active Input Handling</strong> in Player Settings and keep one UI input module active. The sample selects its painting input backend automatically.</p>
 <p>With <strong>Both</strong> selected, the sample uses its Input System adapter, so keep <code>InputSystemUIInputModule</code> enabled. If Input System is not installed for a legacy-only project, remove its missing component from the imported EventSystem. The backend does not change project settings automatically.</p>
-<p>The imported sample is an editable copy, not a live link to the package sample. Keep only one imported version to avoid duplicate assemblies and asset GUIDs. Preserve local changes before reimporting.</p>
+<p>The imported sample is an editable copy, not a live link to the package sample. Preserve local changes before reimporting. Avoid importing multiple versions of the new Common sample at once because they use the same assembly names.</p>
 <h2>Explore the tools</h2>
 <p>Enter Play Mode and use the Game view.</p>
 <table><thead><tr><th>Tool or control</th><th>Try this</th></tr></thead><tbody>

@@ -9,7 +9,7 @@
 <h2>The receiver disables itself</h2>
 <p>Missing Receiver Settings produces an error and disables the component. Assign the settings asset, check its processing resources, and re-enable PaintReceiver.</p>
 <h2>The projector disables itself during initialization</h2>
-<p>Check its Paint Settings and Paint Shader. The current implementation also performs an asynchronous license check during initialization. If the Console reports <strong>Projector initialization failed.</strong>, ask the package maintainer to check the license setup.</p>
+<p>Check its Paint Settings and Paint Shader. In the binary package, Player builds also check the license during initialization. If the Console reports <strong>Projector initialization failed.</strong>, ask the package maintainer to check the license setup. Source package builds and Editor Play Mode do not send license requests.</p>
 <h2>Marks repeat, smear, or land in the wrong place</h2>
 <p>Check <strong>UV1 / mesh.uv2</strong>, the channel used by the paint-writing shaders. Overlapping islands repeat paint; a missing or unsuitable second UV channel cannot be fixed by changing Pixels Per Unit.</p>
 <p>If several renderers share a receiver, check their combined UV layout. The UV-scale calculator's UV0 fallback is only a measurement fallback.</p>

@@ -7,7 +7,8 @@
 <table><thead><tr><th>Item</th><th>Declared version</th></tr></thead><tbody>
 <tr><td>Package</td><td><code>1.0.0</code></td></tr>
 <tr><td>Unity baseline</td><td><code>6000.3</code></td></tr>
-<tr><td>Universal Render Pipeline (URP)</td><td><code>14.0.0</code></td></tr>
+<tr><td>SRP Core dependency</td><td><code>17.0.0</code></td></tr>
+<tr><td>Shader Graph dependency</td><td><code>17.0.0</code></td></tr>
 <tr><td>Collections dependency</td><td><code>1.2.4</code></td></tr>
 <tr><td>Burst dependency</td><td><code>1.8.18</code></td></tr>
 </tbody></table>
@@ -16,7 +17,7 @@
 <ul><li><strong>Unity UI (uGUI):</strong> required for the Spray Demo UI.</li><li><strong>Input System:</strong> recommended for the demo, but not required by the core package.</li><li><strong>Legacy input:</strong> supported by a separate demo backend when Input System is not enabled.</li></ul>
 <p>Follow <a href="sample-exploration.html">Sample exploration</a> to configure the EventSystem for your selected input backend.</p>
 <h2>Rendering and device checks</h2>
-<p>Use a URP project with the supplied receiver shaders. The code includes URP compatibility handling; it does not establish support for Built-in or HDRP materials.</p>
+<p>Install either URP or HDRP in the project. The supplied Lit and Unlit receiver Shader Graphs contain targets for both pipelines; the optimized and Amplify receiver shaders are URP-only. The Built-in Render Pipeline is not supported. The initial HDRP validation target is Unity 6.3, including desktop and PC VR.</p>
 <p>Saving and PNG export require asynchronous GPU readback. Receiver initialization also requires the supplied compute shader references. Check these features on the intended device.</p>
 <p>Before delivery, test painting, saving, shader variants, texture memory, and any XR interaction in a target Player or headset. A successful compilation alone does not verify those behaviors.</p>
 <h2>Demo setup requirements</h2>
